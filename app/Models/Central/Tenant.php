@@ -69,14 +69,18 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     /**
      * Get the database connection configuration for this tenant
      */
+    // CRITICAL: Override this method for multi-DB
     public function getConnectionData(): array
     {
         return [
-            'host' => $this->data['tenancy_db_host'] ?? env('DB_HOST', '127.0.0.1'),
-            'port' => $this->data['tenancy_db_port'] ?? env('DB_PORT', '3306'),
-            'database' => $this->data['tenancy_db_name'] ?? 'tenant' . str_replace('-', '', $this->id),
+            'host' => $this->data['tenancy_db_host'] ?? env('DB_HOST'),
+            'port' => $this->data['tenancy_db_port'] ?? env('DB_PORT'),
+            'database' => $this->data['tenancy_db_name'] ?? $this->id,
             'username' => $this->data['tenancy_db_user'] ?? env('DB_USERNAME'),
             'password' => $this->data['tenancy_db_password'] ?? env('DB_PASSWORD'),
+            'driver' => 'mysql', // Add this
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
         ];
     }
 
