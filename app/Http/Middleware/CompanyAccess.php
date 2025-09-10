@@ -25,6 +25,7 @@ class CompanyAccess
 
             // Get company_id from JWT token
             $payload = JWTAuth::parseToken()->getPayload();
+
             $companyId = $payload->get('company_id');
             
             if (!$companyId) {

@@ -18,16 +18,22 @@ return Application::configure(basePath: dirname(__DIR__))
         'tenant.identify' => IdentifyTenant::class,
             'company.access' => CompanyAccess::class,
         ]);
-        
-        // CORS configuration
-        // $middleware->web(append: [
-        //     \App\Http\Middleware\HandleCors::class,
-        // ]);
-        
-        // $middleware->api(append: [
-        //     \App\Http\Middleware\HandleCors::class,
-        // ]);
-    })
+
+    // 🔑 Enforce global middleware priority
+    $middleware->priority([
+        IdentifyTenant::class,                     // must run first
+        \Illuminate\Auth\Middleware\Authenticate::class, // then auth:api
+    ]);
+
+    // CORS configuration
+    // $middleware->web(append: [
+    //     \App\Http\Middleware\HandleCors::class,
+    // ]);
+
+    // $middleware->api(append: [
+    //     \App\Http\Middleware\HandleCors::class,
+    // ]);
+})
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
